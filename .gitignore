@@ -2,6 +2,9 @@
 tools/test-config.json
 tools/substitution-test-result.json
 
+# 临时工作目录
+tmp/
+
 # 注意：以下文件为演示产物，可选择性提交
 # tools/scan-result.json          # 扫描结果（含代码片段，已脱敏）
 # tools/audit-report-real.html    # 生成的HTML报告（不含敏感信息）
