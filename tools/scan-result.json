@@ -1,0 +1,605 @@
+{
+  "projectName": "src",
+  "scanDate": "2026-10-16T08:00:46.707Z",
+  "dependencies": [
+    {
+      "id": "dep-1",
+      "type": "api-call",
+      "file": "client\\src\\api\\ai.ts",
+      "line": 15,
+      "code": "* 语音转文字：上传录音，由后端调用 OpenAI 兼容的 /audio/transcriptions。"
+    },
+    {
+      "id": "dep-2",
+      "type": "api-call",
+      "file": "client\\src\\hooks\\useVoiceInput.ts",
+      "line": 73,
+      "code": "*    /audio/transcriptions 的模型，但兼容性好、识别质量稳定。"
+    },
+    {
+      "id": "dep-3",
+      "type": "api-call",
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 339,
+      "code": "/audio/transcriptions（OpenAI 兼容格式）。"
+    },
+    {
+      "id": "dep-4",
+      "type": "api-call",
+      "file": "server\\modules\\ai\\ai.controller.ts",
+      "line": 36,
+      "code": "* /audio/transcriptions 接口（whisper-1、paraformer-v2 等）。"
+    },
+    {
+      "id": "dep-5",
+      "type": "api-call",
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 277,
+      "code": "* 语音转文字。复用用户配置的 OpenAI 兼容凭据，调用 /audio/transcriptions。"
+    },
+    {
+      "id": "dep-6",
+      "type": "api-call",
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 312,
+      "code": "this.httpService.post(`${baseUrl}/audio/transcriptions`, form, {"
+    },
+    {
+      "id": "dep-7",
+      "type": "api-call",
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 348,
+      "code": "`当前接口地址不支持语音转文字（未找到 /audio/transcriptions）。若使用通义/智谱等服务，请在设置中填写其兼容 Base URL，或改用浏览器内置语音识别。`,"
+    },
+    {
+      "id": "dep-8",
+      "type": "api-call",
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 836,
+      "code": "const endpoint = `${baseUrl.replace(/\\/$/, '')}/chat/completions`;"
+    },
+    {
+      "id": "dep-9",
+      "type": "api-call",
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 13,
+      "code": "/** 语音转写默认模型（OpenAI 兼容 /audio/transcriptions） */"
+    },
+    {
+      "id": "dep-10",
+      "type": "api-call",
+      "file": "shared\\api.interface.ts",
+      "line": 127,
+      "code": "/** 语音转文字模型（OpenAI 兼容 /audio/transcriptions，如 whisper-1） */"
+    }
+  ],
+  "configLocations": [
+    {
+      "file": "client\\src\\pages\\HomePage\\HomePage.tsx",
+      "line": 648,
+      "code": "if (msg.includes('401') || msg.includes('Unauthorized') || msg.includes('invalid_api_key')) {"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 40,
+      "code": "llmApiKey: '',"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 41,
+      "code": "llmBaseUrl: '',"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 42,
+      "code": "llmModel: 'gpt-4o-mini',"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 47,
+      "code": "const [showApiKey, setShowApiKey] = useState(false);"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 68,
+      "code": "setSavedMaskedKey(data.llmApiKey || '');"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 90,
+      "code": "llmBaseUrl: settings.llmBaseUrl,"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 91,
+      "code": "llmModel: settings.llmModel,"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 99,
+      "code": "if (!isMaskedKey(settings.llmApiKey) && settings.llmApiKey.trim()) {"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 100,
+      "code": "data.llmApiKey = settings.llmApiKey.trim();"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 104,
+      "code": "setSavedMaskedKey(updated.llmApiKey || '');"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 237,
+      "code": "type={showApiKey ? 'text' : 'password'}"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 238,
+      "code": "value={settings.llmApiKey}"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 240,
+      "code": "setSettings({ ...settings, llmApiKey: e.target.value })"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 243,
+      "code": "if (isMaskedKey(settings.llmApiKey)) {"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 244,
+      "code": "setSettings((prev) => ({ ...prev, llmApiKey: '' }));"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 251,
+      "code": "!prev.llmApiKey.trim() && savedMaskedKey"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 252,
+      "code": "? { ...prev, llmApiKey: savedMaskedKey }"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 263,
+      "code": "onClick={() => setShowApiKey(!showApiKey)}"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 266,
+      "code": "{showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 278,
+      "code": "value={settings.llmBaseUrl}"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 280,
+      "code": "setSettings({ ...settings, llmBaseUrl: e.target.value })"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 294,
+      "code": "value={settings.llmModel}"
+    },
+    {
+      "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+      "line": 296,
+      "code": "setSettings({ ...settings, llmModel: e.target.value })"
+    },
+    {
+      "file": "server\\database\\schema.ts",
+      "line": 152,
+      "code": "llmApiKey: text(\"llm_api_key\").notNull(),"
+    },
+    {
+      "file": "server\\database\\schema.ts",
+      "line": 153,
+      "code": "llmBaseUrl: text(\"llm_base_url\").notNull(),"
+    },
+    {
+      "file": "server\\database\\schema.ts",
+      "line": 154,
+      "code": "llmModel: text(\"llm_model\").notNull().default('gpt-4o-mini'),"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 70,
+      "code": "llmBaseUrl: string | null;"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 71,
+      "code": "llmApiKey: string | null;"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 72,
+      "code": "llmModel: string | null;"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 273,
+      "code": "return { configured: settings.length > 0 && !!settings[0].llmApiKey };"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 292,
+      "code": "if (settingsRows.length === 0 || !settingsRows[0].llmApiKey) {"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 297,
+      "code": "const baseUrl = (row.llmBaseUrl || 'https://api.openai.com/v1').replace(/\\/$/, '');"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 298,
+      "code": "const apiKey = row.llmApiKey || '';"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 312,
+      "code": "this.httpService.post(`${baseUrl}/audio/transcriptions`, form, {"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 314,
+      "code": "Authorization: `Bearer ${apiKey}`,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 386,
+      "code": "if (settingsRows.length === 0 || !settingsRows[0].llmApiKey) {"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 391,
+      "code": "const baseUrl = settings.llmBaseUrl || 'https://api.openai.com/v1';"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 392,
+      "code": "const apiKey = settings.llmApiKey || '';"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 393,
+      "code": "const model = settings.llmModel || 'gpt-4o-mini';"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 429,
+      "code": "baseUrl,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 430,
+      "code": "apiKey,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 466,
+      "code": "baseUrl,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 467,
+      "code": "apiKey,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 481,
+      "code": "baseUrl,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 482,
+      "code": "apiKey,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 828,
+      "code": "baseUrl: string,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 829,
+      "code": "apiKey: string,"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 836,
+      "code": "const endpoint = `${baseUrl.replace(/\\/$/, '')}/chat/completions`;"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 856,
+      "code": "Authorization: `Bearer ${apiKey}`,"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 99,
+      "code": ".select({ payload: userSettings.llmModel })"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 153,
+      "code": "llmApiKey: '',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 154,
+      "code": "llmBaseUrl: '',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 155,
+      "code": "llmModel: JSON.stringify(payload),"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 160,
+      "code": "set: { llmModel: JSON.stringify(payload), updatedAt: new Date() },"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 174,
+      "code": "private maskApiKey(apiKey: string): string {"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 175,
+      "code": "if (!apiKey) return '';"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 176,
+      "code": "if (apiKey.length > 4) {"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 177,
+      "code": "return `${apiKey.slice(0, 4)}****`;"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 187,
+      "code": "* gen:db-schema 时被抹掉。因此这里让 asrModel 跟随 llmModel 派生："
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 192,
+      "code": "llmApiKey: this.maskApiKey(row.llmApiKey),"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 193,
+      "code": "llmBaseUrl: row.llmBaseUrl,"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 194,
+      "code": "llmModel: row.llmModel,"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 273,
+      "code": "llmApiKey: '',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 274,
+      "code": "llmBaseUrl: '',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 275,
+      "code": "llmModel: 'gpt-4o-mini',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 334,
+      "code": "llmApiKey: dto.llmApiKey && !dto.llmApiKey.includes('****') ? dto.llmApiKey : '',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 335,
+      "code": "llmBaseUrl: dto.llmBaseUrl ?? '',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 336,
+      "code": "llmModel: dto.llmModel ?? 'gpt-4o-mini',"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 347,
+      "code": "if (dto.llmApiKey !== undefined && !dto.llmApiKey.includes('****')) {"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 348,
+      "code": "patch.llmApiKey = dto.llmApiKey;"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 350,
+      "code": "if (dto.llmBaseUrl !== undefined) patch.llmBaseUrl = dto.llmBaseUrl;"
+    },
+    {
+      "file": "server\\modules\\settings\\settings.service.ts",
+      "line": 351,
+      "code": "if (dto.llmModel !== undefined) patch.llmModel = dto.llmModel;"
+    },
+    {
+      "file": "shared\\api.interface.ts",
+      "line": 124,
+      "code": "llmApiKey: string;"
+    },
+    {
+      "file": "shared\\api.interface.ts",
+      "line": 125,
+      "code": "llmBaseUrl: string;"
+    },
+    {
+      "file": "shared\\api.interface.ts",
+      "line": 126,
+      "code": "llmModel: string;"
+    },
+    {
+      "file": "shared\\api.interface.ts",
+      "line": 135,
+      "code": "llmApiKey?: string;"
+    },
+    {
+      "file": "shared\\api.interface.ts",
+      "line": 136,
+      "code": "llmBaseUrl?: string;"
+    },
+    {
+      "file": "shared\\api.interface.ts",
+      "line": 137,
+      "code": "llmModel?: string;"
+    }
+  ],
+  "prompts": [
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 19,
+      "preview": "const SYSTEM_PROMPT = `你是一个智能笔记整理助手。请分析用户的笔记内容，进行智能分类和信息提取。",
+      "fullContent": "const SYSTEM_PROMPT = `你是一个智能笔记整理助手。请分析用户的笔记内容，进行智能分类和信息提取。\n\n必须严格只输出一个 JSON 对象，不要输出任何解释文字、前后缀说明或 Markdown 代码块标记（不要出现 \\`\\`\\`）。\n\n返回格式：\n{\n  \"category\": \"task\" | \"idea\" | \"memo\" | \"collection\" | \"diary\" | \"schedule\",\n  \"entities\": {\n    \"time\": [\"提取的时间信息\"],\n    \"people\": [\"提取的人物名称\"],\n    \"location\": [\"提取的地点信息\"]\n  },\n  \"taskInfo\": {\n    \"content\": \"任务内容（仅当 category 为 task 或 schedule 时填写）\",\n    \"dueDate\": \"ISO 格式的截止时间，如 2026-09-23T18:00:00（仅在能明确推断时填写）\",\n    \"priority\": \"high\" | \"medium\" | \"low\"\n  },\n "
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 432,
+      "preview": "SYSTEM_PROMPT,",
+      "fullContent": "          SYSTEM_PROMPT,\n          multimodalContent,\n        );\n        visionUsed = true;\n\n        // 视觉路径成功但没提取到任何图中文字，用 OCR 结果兜底补上\n        aiResult = this.mergeOcrFallback(aiResult, ocrTexts);\n        aiResult.extractedText = aiResult.extractedText?.trim() || undefined;\n      } catch (visionError) {\n        const status = (visionError as { status?: number }).status;\n        const message =\n          visionError instanceof Error ? visionError.message : String(visionError);\n\n        this.logge"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 469,
+      "preview": "SYSTEM_PROMPT,",
+      "fullContent": "            SYSTEM_PROMPT,\n            textOnlyPrompt,\n          );\n          aiResult.imageCaptions = [];\n        } catch (textError) {\n          // 纯文本路径也要把友好文案透传成 400，否则会被全局过滤器归成 500\n          this.throwBadRequestFromCall(textError);\n        }\n      }\n    } else {\n      try {\n        aiResult = await this.callLLM(\n          baseUrl,\n          apiKey,\n          model,\n          SYSTEM_PROMPT,\n          textOnlyPrompt,\n        );\n      } catch (textError) {\n        this.throwBadRequestFromCall("
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 484,
+      "preview": "SYSTEM_PROMPT,",
+      "fullContent": "          SYSTEM_PROMPT,\n          textOnlyPrompt,\n        );\n      } catch (textError) {\n        this.throwBadRequestFromCall(textError);\n      }\n    }\n\n    // 未走视觉通道时，不保留模型可能臆造的图片描述\n    if (!visionUsed) {\n      aiResult.imageCaptions = [];\n    }\n\n    // 模型可能返回自定义分类的显示名，统一归一化成可存储的分类 id\n    aiResult.category = this.resolveCategory(aiResult.category, customCategories);\n\n    aiResult.visionUsed = visionUsed;\n    aiResult.visionFallbackReason = visionFallbackReason;\n\n    // 用户手动选过分类（不是默认的 memo）→ 保留"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 831,
+      "preview": "systemPrompt: string,",
+      "fullContent": "    systemPrompt: string,\n    userContent: string | MultimodalContent,\n    options: { jsonMode?: boolean } = {},\n  ): Promise<AnalyzeOutcome> {\n    const { jsonMode = true } = options;\n    const endpoint = `${baseUrl.replace(/\\/$/, '')}/chat/completions`;"
+    },
+    {
+      "file": "server\\modules\\ai\\ai.service.ts",
+      "line": 841,
+      "preview": "{ role: 'system', content: systemPrompt },",
+      "fullContent": "        { role: 'system', content: systemPrompt },\n        { role: 'user', content: userContent },\n      ],\n    };\n\n    if (jsonMode) {\n      // 多数 OpenAI 兼容服务（含通义、智谱、豆包）都支持 json_object；\n      // 若服务端不支持会在下面捕获并去掉该字段重试。\n      body.response_format = { type: 'json_object' };\n    }\n\n    const send = async (payload: Record<string, unknown>) =>\n      firstValueFrom(\n        this.httpService.post(endpoint, payload, {\n          headers: {\n            Authorization: `Bearer ${apiKey}`,\n            'Conte"
+    }
+  ],
+  "summary": {
+    "totalFiles": 271,
+    "scannedFiles": 243,
+    "apiCallPoints": 10,
+    "configPoints": 79,
+    "promptPoints": 6,
+    "filesWithDependencies": 7,
+    "fileGroups": {
+      "client\\src\\api\\ai.ts": [
+        {
+          "id": "dep-1",
+          "type": "api-call",
+          "file": "client\\src\\api\\ai.ts",
+          "line": 15,
+          "code": "* 语音转文字：上传录音，由后端调用 OpenAI 兼容的 /audio/transcriptions。"
+        }
+      ],
+      "client\\src\\hooks\\useVoiceInput.ts": [
+        {
+          "id": "dep-2",
+          "type": "api-call",
+          "file": "client\\src\\hooks\\useVoiceInput.ts",
+          "line": 73,
+          "code": "*    /audio/transcriptions 的模型，但兼容性好、识别质量稳定。"
+        }
+      ],
+      "client\\src\\pages\\SettingsPage\\SettingsPage.tsx": [
+        {
+          "id": "dep-3",
+          "type": "api-call",
+          "file": "client\\src\\pages\\SettingsPage\\SettingsPage.tsx",
+          "line": 339,
+          "code": "/audio/transcriptions（OpenAI 兼容格式）。"
+        }
+      ],
+      "server\\modules\\ai\\ai.controller.ts": [
+        {
+          "id": "dep-4",
+          "type": "api-call",
+          "file": "server\\modules\\ai\\ai.controller.ts",
+          "line": 36,
+          "code": "* /audio/transcriptions 接口（whisper-1、paraformer-v2 等）。"
+        }
+      ],
+      "server\\modules\\ai\\ai.service.ts": [
+        {
+          "id": "dep-5",
+          "type": "api-call",
+          "file": "server\\modules\\ai\\ai.service.ts",
+          "line": 277,
+          "code": "* 语音转文字。复用用户配置的 OpenAI 兼容凭据，调用 /audio/transcriptions。"
+        },
+        {
+          "id": "dep-6",
+          "type": "api-call",
+          "file": "server\\modules\\ai\\ai.service.ts",
+          "line": 312,
+          "code": "this.httpService.post(`${baseUrl}/audio/transcriptions`, form, {"
+        },
+        {
+          "id": "dep-7",
+          "type": "api-call",
+          "file": "server\\modules\\ai\\ai.service.ts",
+          "line": 348,
+          "code": "`当前接口地址不支持语音转文字（未找到 /audio/transcriptions）。若使用通义/智谱等服务，请在设置中填写其兼容 Base URL，或改用浏览器内置语音识别。`,"
+        },
+        {
+          "id": "dep-8",
+          "type": "api-call",
+          "file": "server\\modules\\ai\\ai.service.ts",
+          "line": 836,
+          "code": "const endpoint = `${baseUrl.replace(/\\/$/, '')}/chat/completions`;"
+        }
+      ],
+      "server\\modules\\settings\\settings.service.ts": [
+        {
+          "id": "dep-9",
+          "type": "api-call",
+          "file": "server\\modules\\settings\\settings.service.ts",
+          "line": 13,
+          "code": "/** 语音转写默认模型（OpenAI 兼容 /audio/transcriptions） */"
+        }
+      ],
+      "shared\\api.interface.ts": [
+        {
+          "id": "dep-10",
+          "type": "api-call",
+          "file": "shared\\api.interface.ts",
+          "line": 127,
+          "code": "/** 语音转文字模型（OpenAI 兼容 /audio/transcriptions，如 whisper-1） */"
+        }
+      ]
+    }
+  }
+}

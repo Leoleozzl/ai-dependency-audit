@@ -1,0 +1,19 @@
+{
+  "baselineModel": {
+    "name": "gpt-4o-mini",
+    "apiKey": "your-openai-api-key",
+    "baseUrl": "https://api.openai.com/v1"
+  },
+  "candidateModels": [
+    {
+      "name": "deepseek-chat",
+      "apiKey": "your-deepseek-api-key",
+      "baseUrl": "https://api.deepseek.com/v1"
+    },
+    {
+      "name": "qwen-vl-plus",
+      "apiKey": "your-qwen-api-key",
+      "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+# AI审计工具敏感文件（含真实API Key，禁止提交）
+tools/test-config.json
+tools/substitution-test-result.json
+
+# 注意：以下文件为演示产物，可选择性提交
+# tools/scan-result.json          # 扫描结果（含代码片段，已脱敏）
+# tools/audit-report-real.html    # 生成的HTML报告（不含敏感信息）
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 临时文件
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

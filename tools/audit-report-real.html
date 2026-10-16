@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI依赖审计报告 - src</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: light-dark(#f5f5f5, #0A0D12);
+      color: light-dark(#212529, #e9ecef);
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background: light-dark(#ffffff, #0F131C);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid light-dark(#dee2e6, #2d3748);
+    }
+    
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .header .meta {
+      color: light-dark(#6c757d, #adb5bd);
+      font-size: 0.875rem;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: light-dark(#ffffff, #0F131C);
+      border: 1px solid light-dark(#dee2e6, #2d3748);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: light-dark(#38BDF8, #38BDF8);
+      display: block;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: light-dark(#6c757d, #adb5bd);
+      margin-top: 0.25rem;
+    }
+    
+    .section {
+      background: light-dark(#ffffff, #0F131C);
+      border: 1px solid light-dark(#dee2e6, #2d3748);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dep-list {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .dep-item {
+      background: light-dark(#f8f9fa, #161D2B);
+      border-radius: 8px;
+      padding: 1rem;
+      border-left: 4px solid;
+    }
+    
+    .dep-item.critical {
+      border-left-color: light-dark(#EF4444, #F87171);
+    }
+    
+    .dep-item.high {
+      border-left-color: light-dark(#F59E0B, #FBBF24);
+    }
+    
+    .dep-item.medium {
+      border-left-color: light-dark(#38BDF8, #38BDF8);
+    }
+    
+    .dep-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+      gap: 1rem;
+    }
+    
+    .dep-file {
+      font-weight: 500;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.875rem;
+    }
+    
+    .dep-line {
+      font-size: 0.75rem;
+      color: light-dark(#6c757d, #adb5bd);
+      white-space: nowrap;
+    }
+    
+    .dep-code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.813rem;
+      color: light-dark(#495057, #adb5bd);
+      padding: 0.5rem;
+      background: light-dark(#e9ecef, #0A0D12);
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .badge-critical {
+      background: color-mix(in srgb, light-dark(#EF4444, #F87171) 20%, transparent);
+      color: light-dark(#EF4444, #F87171);
+    }
+    
+    .badge-high {
+      background: color-mix(in srgb, light-dark(#F59E0B, #FBBF24) 20%, transparent);
+      color: light-dark(#F59E0B, #FBBF24);
+    }
+    
+    .badge-medium {
+      background: color-mix(in srgb, light-dark(#38BDF8, #38BDF8) 20%, transparent);
+      color: light-dark(#38BDF8, #38BDF8);
+    }
+    
+    .prompt-preview {
+      max-height: 200px;
+      overflow-y: auto;
+      background: light-dark(#e9ecef, #0A0D12);
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.813rem;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+    }
+    
+    .file-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .file-group-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.875rem;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .header, .section {
+        padding: 1.5rem;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>AI依赖审计报告</h1>
+      <div class="meta">
+        <div>项目: src</div>
+        <div>扫描时间: 2026/10/16 16:00:46</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-value">243</span>
+        <div class="stat-label">扫描文件数</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">10</span>
+        <div class="stat-label">AI调用点</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">79</span>
+        <div class="stat-label">配置点</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">6</span>
+        <div class="stat-label">Prompt模板</div>
+      </div>
+    </div>
+
+    <!-- Dependencies -->
+    <div class="section">
+      <h2 class="section-title">🔌 AI服务依赖点</h2>
+      <div class="dep-list">
+      <div class="file-group">
+        <div class="file-group-title">
+          client\src\api\ai.ts 
+          <span class="badge badge-medium">一般</span>
+        </div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\api\ai.ts</div>
+            <div class="dep-line">行 15</div>
+          </div>
+          <div class="dep-code">* 语音转文字：上传录音，由后端调用 OpenAI 兼容的 /audio/transcriptions。</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">
+          client\src\hooks\useVoiceInput.ts 
+          <span class="badge badge-medium">一般</span>
+        </div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\hooks\useVoiceInput.ts</div>
+            <div class="dep-line">行 73</div>
+          </div>
+          <div class="dep-code">*    /audio/transcriptions 的模型，但兼容性好、识别质量稳定。</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">
+          client\src\pages\SettingsPage\SettingsPage.tsx 
+          <span class="badge badge-medium">一般</span>
+        </div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\pages\SettingsPage\SettingsPage.tsx</div>
+            <div class="dep-line">行 339</div>
+          </div>
+          <div class="dep-code">/audio/transcriptions（OpenAI 兼容格式）。</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">
+          server\modules\ai\ai.controller.ts 
+          <span class="badge badge-high">重要</span>
+        </div>
+      
+        <div class="dep-item high">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.controller.ts</div>
+            <div class="dep-line">行 36</div>
+          </div>
+          <div class="dep-code">* /audio/transcriptions 接口（whisper-1、paraformer-v2 等）。</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">
+          server\modules\ai\ai.service.ts 
+          <span class="badge badge-critical">关键</span>
+        </div>
+      
+        <div class="dep-item critical">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 277</div>
+          </div>
+          <div class="dep-code">* 语音转文字。复用用户配置的 OpenAI 兼容凭据，调用 /audio/transcriptions。</div>
+        </div>
+        
+        <div class="dep-item critical">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 312</div>
+          </div>
+          <div class="dep-code">this.httpService.post(`${baseUrl}/audio/transcriptions`, form, {</div>
+        </div>
+        
+        <div class="dep-item critical">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 348</div>
+          </div>
+          <div class="dep-code">`当前接口地址不支持语音转文字（未找到 /audio/transcriptions）。若使用通义/智谱等服务，请在设置中填写其兼容 Base URL，或改用浏览器内置语音识别。`,</div>
+        </div>
+        
+        <div class="dep-item critical">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 836</div>
+          </div>
+          <div class="dep-code">const endpoint = `${baseUrl.replace(/\/$/, &#039;&#039;)}/chat/completions`;</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">
+          server\modules\settings\settings.service.ts 
+          <span class="badge badge-high">重要</span>
+        </div>
+      
+        <div class="dep-item high">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\settings\settings.service.ts</div>
+            <div class="dep-line">行 13</div>
+          </div>
+          <div class="dep-code">/** 语音转写默认模型（OpenAI 兼容 /audio/transcriptions） */</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">
+          shared\api.interface.ts 
+          <span class="badge badge-medium">一般</span>
+        </div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">shared\api.interface.ts</div>
+            <div class="dep-line">行 127</div>
+          </div>
+          <div class="dep-code">/** 语音转文字模型（OpenAI 兼容 /audio/transcriptions，如 whisper-1） */</div>
+        </div>
+        </div></div>
+    </div>
+
+    <!-- Config Locations -->
+    <div class="section">
+      <h2 class="section-title">⚙️ 配置存储位置</h2>
+      <div class="dep-list">
+      <div class="file-group">
+        <div class="file-group-title">client\src\pages\HomePage\HomePage.tsx</div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\pages\HomePage\HomePage.tsx</div>
+            <div class="dep-line">行 648</div>
+          </div>
+          <div class="dep-code">if (msg.includes(&#039;401&#039;) || msg.includes(&#039;Unauthorized&#039;) || msg.includes(&#039;invalid_api_key&#039;)) {</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">client\src\pages\SettingsPage\SettingsPage.tsx</div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\pages\SettingsPage\SettingsPage.tsx</div>
+            <div class="dep-line">行 40</div>
+          </div>
+          <div class="dep-code">llmApiKey: &#039;&#039;,</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\pages\SettingsPage\SettingsPage.tsx</div>
+            <div class="dep-line">行 41</div>
+          </div>
+          <div class="dep-code">llmBaseUrl: &#039;&#039;,</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">client\src\pages\SettingsPage\SettingsPage.tsx</div>
+            <div class="dep-line">行 42</div>
+          </div>
+          <div class="dep-code">llmModel: &#039;gpt-4o-mini&#039;,</div>
+        </div>
+        <div style="color: #6c757d; font-size: 0.875rem; margin-top: 0.5rem;">... 还有 20 个配置点</div></div>
+      <div class="file-group">
+        <div class="file-group-title">server\database\schema.ts</div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\database\schema.ts</div>
+            <div class="dep-line">行 152</div>
+          </div>
+          <div class="dep-code">llmApiKey: text(&quot;llm_api_key&quot;).notNull(),</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\database\schema.ts</div>
+            <div class="dep-line">行 153</div>
+          </div>
+          <div class="dep-code">llmBaseUrl: text(&quot;llm_base_url&quot;).notNull(),</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\database\schema.ts</div>
+            <div class="dep-line">行 154</div>
+          </div>
+          <div class="dep-code">llmModel: text(&quot;llm_model&quot;).notNull().default(&#039;gpt-4o-mini&#039;),</div>
+        </div>
+        </div>
+      <div class="file-group">
+        <div class="file-group-title">server\modules\ai\ai.service.ts</div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 70</div>
+          </div>
+          <div class="dep-code">llmBaseUrl: string | null;</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 71</div>
+          </div>
+          <div class="dep-code">llmApiKey: string | null;</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\ai\ai.service.ts</div>
+            <div class="dep-line">行 72</div>
+          </div>
+          <div class="dep-code">llmModel: string | null;</div>
+        </div>
+        <div style="color: #6c757d; font-size: 0.875rem; margin-top: 0.5rem;">... 还有 20 个配置点</div></div>
+      <div class="file-group">
+        <div class="file-group-title">server\modules\settings\settings.service.ts</div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\settings\settings.service.ts</div>
+            <div class="dep-line">行 99</div>
+          </div>
+          <div class="dep-code">.select({ payload: userSettings.llmModel })</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\settings\settings.service.ts</div>
+            <div class="dep-line">行 153</div>
+          </div>
+          <div class="dep-code">llmApiKey: &#039;&#039;,</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">server\modules\settings\settings.service.ts</div>
+            <div class="dep-line">行 154</div>
+          </div>
+          <div class="dep-code">llmBaseUrl: &#039;&#039;,</div>
+        </div>
+        <div style="color: #6c757d; font-size: 0.875rem; margin-top: 0.5rem;">... 还有 20 个配置点</div></div>
+      <div class="file-group">
+        <div class="file-group-title">shared\api.interface.ts</div>
+      
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">shared\api.interface.ts</div>
+            <div class="dep-line">行 124</div>
+          </div>
+          <div class="dep-code">llmApiKey: string;</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">shared\api.interface.ts</div>
+            <div class="dep-line">行 125</div>
+          </div>
+          <div class="dep-code">llmBaseUrl: string;</div>
+        </div>
+        
+        <div class="dep-item medium">
+          <div class="dep-header">
+            <div class="dep-file">shared\api.interface.ts</div>
+            <div class="dep-line">行 126</div>
+          </div>
+          <div class="dep-code">llmModel: string;</div>
+        </div>
+        <div style="color: #6c757d; font-size: 0.875rem; margin-top: 0.5rem;">... 还有 3 个配置点</div></div></div>
+    </div>
+
+    <!-- Prompts -->
+    <div class="section">
+      <h2 class="section-title">📝 业务规则 (Prompt模板)</h2>
+      <div class="dep-list">
+      <div class="dep-item high">
+        <div class="dep-header">
+          <div class="dep-file">server\modules\ai\ai.service.ts</div>
+          <div class="dep-line">行 19</div>
+        </div>
+        <div class="dep-code">const SYSTEM_PROMPT = `你是一个智能笔记整理助手。请分析用户的笔记内容，进行智能分类和信息提取。</div>
+        
+        <details>
+          <summary style="cursor: pointer; color: #38BDF8; margin-top: 0.5rem; font-size: 0.875rem;">查看完整内容</summary>
+          <div class="prompt-preview">const SYSTEM_PROMPT = `你是一个智能笔记整理助手。请分析用户的笔记内容，进行智能分类和信息提取。
+
+必须严格只输出一个 JSON 对象，不要输出任何解释文字、前后缀说明或 Markdown 代码块标记（不要出现 \`\`\`）。
+
+返回格式：
+{
+  &quot;category&quot;: &quot;task&quot; | &quot;idea&quot; | &quot;memo&quot; | &quot;collection&quot; | &quot;diary&quot; | &quot;schedule&quot;,
+  &quot;entities&quot;: {
+    &quot;time&quot;: [&quot;提取的时间信息&quot;],
+    &quot;people&quot;: [&quot;提取的人物名称&quot;],
+    &quot;location&quot;: [&quot;提取的地点信息&quot;]
+  },
+  &quot;taskInfo&quot;: {
+    &quot;content&quot;: &quot;任务内容（仅当 category 为 task 或 schedule 时填写）&quot;,
+    &quot;dueDate&quot;: &quot;ISO 格式的截止时间，如 2026-09-23T18:00:00（仅在能明确推断时填写）&quot;,
+    &quot;priority&quot;: &quot;high&quot; | &quot;medium&quot; | &quot;low&quot;
+  },
+ </div>
+        </details>
+        
+      </div>
+      
+      <div class="dep-item high">
+        <div class="dep-header">
+          <div class="dep-file">server\modules\ai\ai.service.ts</div>
+          <div class="dep-line">行 432</div>
+        </div>
+        <div class="dep-code">SYSTEM_PROMPT,</div>
+        
+        <details>
+          <summary style="cursor: pointer; color: #38BDF8; margin-top: 0.5rem; font-size: 0.875rem;">查看完整内容</summary>
+          <div class="prompt-preview">          SYSTEM_PROMPT,
+          multimodalContent,
+        );
+        visionUsed = true;
+
+        // 视觉路径成功但没提取到任何图中文字，用 OCR 结果兜底补上
+        aiResult = this.mergeOcrFallback(aiResult, ocrTexts);
+        aiResult.extractedText = aiResult.extractedText?.trim() || undefined;
+      } catch (visionError) {
+        const status = (visionError as { status?: number }).status;
+        const message =
+          visionError instanceof Error ? visionError.message : String(visionError);
+
+        this.logge</div>
+        </details>
+        
+      </div>
+      
+      <div class="dep-item high">
+        <div class="dep-header">
+          <div class="dep-file">server\modules\ai\ai.service.ts</div>
+          <div class="dep-line">行 469</div>
+        </div>
+        <div class="dep-code">SYSTEM_PROMPT,</div>
+        
+        <details>
+          <summary style="cursor: pointer; color: #38BDF8; margin-top: 0.5rem; font-size: 0.875rem;">查看完整内容</summary>
+          <div class="prompt-preview">            SYSTEM_PROMPT,
+            textOnlyPrompt,
+          );
+          aiResult.imageCaptions = [];
+        } catch (textError) {
+          // 纯文本路径也要把友好文案透传成 400，否则会被全局过滤器归成 500
+          this.throwBadRequestFromCall(textError);
+        }
+      }
+    } else {
+      try {
+        aiResult = await this.callLLM(
+          baseUrl,
+          apiKey,
+          model,
+          SYSTEM_PROMPT,
+          textOnlyPrompt,
+        );
+      } catch (textError) {
+        this.throwBadRequestFromCall(</div>
+        </details>
+        
+      </div>
+      
+      <div class="dep-item high">
+        <div class="dep-header">
+          <div class="dep-file">server\modules\ai\ai.service.ts</div>
+          <div class="dep-line">行 484</div>
+        </div>
+        <div class="dep-code">SYSTEM_PROMPT,</div>
+        
+        <details>
+          <summary style="cursor: pointer; color: #38BDF8; margin-top: 0.5rem; font-size: 0.875rem;">查看完整内容</summary>
+          <div class="prompt-preview">          SYSTEM_PROMPT,
+          textOnlyPrompt,
+        );
+      } catch (textError) {
+        this.throwBadRequestFromCall(textError);
+      }
+    }
+
+    // 未走视觉通道时，不保留模型可能臆造的图片描述
+    if (!visionUsed) {
+      aiResult.imageCaptions = [];
+    }
+
+    // 模型可能返回自定义分类的显示名，统一归一化成可存储的分类 id
+    aiResult.category = this.resolveCategory(aiResult.category, customCategories);
+
+    aiResult.visionUsed = visionUsed;
+    aiResult.visionFallbackReason = visionFallbackReason;
+
+    // 用户手动选过分类（不是默认的 memo）→ 保留</div>
+        </details>
+        
+      </div>
+      
+      <div class="dep-item high">
+        <div class="dep-header">
+          <div class="dep-file">server\modules\ai\ai.service.ts</div>
+          <div class="dep-line">行 831</div>
+        </div>
+        <div class="dep-code">systemPrompt: string,</div>
+        
+        <details>
+          <summary style="cursor: pointer; color: #38BDF8; margin-top: 0.5rem; font-size: 0.875rem;">查看完整内容</summary>
+          <div class="prompt-preview">    systemPrompt: string,
+    userContent: string | MultimodalContent,
+    options: { jsonMode?: boolean } = {},
+  ): Promise&lt;AnalyzeOutcome&gt; {
+    const { jsonMode = true } = options;
+    const endpoint = `${baseUrl.replace(/\/$/, &#039;&#039;)}/chat/completions`;</div>
+        </details>
+        
+      </div>
+      
+      <div class="dep-item high">
+        <div class="dep-header">
+          <div class="dep-file">server\modules\ai\ai.service.ts</div>
+          <div class="dep-line">行 841</div>
+        </div>
+        <div class="dep-code">{ role: &#039;system&#039;, content: systemPrompt },</div>
+        
+        <details>
+          <summary style="cursor: pointer; color: #38BDF8; margin-top: 0.5rem; font-size: 0.875rem;">查看完整内容</summary>
+          <div class="prompt-preview">        { role: &#039;system&#039;, content: systemPrompt },
+        { role: &#039;user&#039;, content: userContent },
+      ],
+    };
+
+    if (jsonMode) {
+      // 多数 OpenAI 兼容服务（含通义、智谱、豆包）都支持 json_object；
+      // 若服务端不支持会在下面捕获并去掉该字段重试。
+      body.response_format = { type: &#039;json_object&#039; };
+    }
+
+    const send = async (payload: Record&lt;string, unknown&gt;) =&gt;
+      firstValueFrom(
+        this.httpService.post(endpoint, payload, {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            &#039;Conte</div>
+        </details>
+        
+      </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
